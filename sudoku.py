@@ -9,9 +9,16 @@ Authors:  Keven Iskander, Carla Castaneda, Nicole Laslavic, Alexander Francis
 __updated__ = "2020-11-02"
 -------------------------------------------------------
 """
-
+import utilities
 # Some Sudoku puzzle examples taken from here:
 # https://dingo.sbs.arizona.edu/~sandiway/sudoku/examples.html
+
+class Node:
+    domain = [1,2,3,4,5,6,7,8,9]
+    value = 0
+
+    def __init__(self, value):
+        self.value = value
 
 class Sudoku:
 
@@ -25,6 +32,7 @@ class Sudoku:
             self.table = [[0 for i in range(9)] for j in range(9)]
             for i in range(len(lines)):
                 for j in range(len(self.table)):
+                    #self.table[i][j] = Node(lines[i][j])
                     self.table[i][j] = int(lines[i][j])
 
         f.close()
@@ -47,6 +55,12 @@ class Sudoku:
                 print("|" + "---+"*8 + "---|")
             else:
                 print("|" + "   +"*8 + "   |")
+
+        # for x in self.table:
+        #     for y in x:
+        #         print(y.value, end="")
+
+        # print()
 
 
     def valid_col(self, col):
