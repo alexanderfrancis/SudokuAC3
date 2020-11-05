@@ -131,11 +131,10 @@ class Sudoku:
         return result
 
     def is_valid(self):
-        # seen = set()
-        for i in range(len(self.table)):
-            if self.valid_row(i) == False or self.valid_col(i) == False:
-                # print('test3')
-                return False
+        for i in range(9):
+            for j in range(9):
+                if self.valid_row(i) == False or self.valid_col(j) == False or self.valid_subsquare(i, j) == False:
+                    return False
 
         return True
 
@@ -143,8 +142,6 @@ class Sudoku:
 def main():
     sud = Sudoku()
     sud.print_table()
-    print(sud.is_valid())
-    print(sud.is_valid())
     print(sud.is_valid())
 
 if __name__ == "__main__":
