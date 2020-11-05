@@ -17,8 +17,9 @@ class Node:
     domain = [1,2,3,4,5,6,7,8,9]
     value = 0
 
-    def __init__(self, value):
+    def __init__(self, value, domain = domain):
         self.value = value
+        self.domain = domain
 
     def __int__(self):
         
