@@ -11,6 +11,13 @@ __updated__ = "2020-11-02"
 """
 from copy import deepcopy
 
+class Node:
+
+    domain = [1,2,3,4,5,6,7,8,9]
+    value = 0
+
+    def __init__(self, value):
+        self.value = value
 
 class PriorityQueue:
 
