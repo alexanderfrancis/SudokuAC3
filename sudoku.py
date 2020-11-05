@@ -166,6 +166,28 @@ class Sudoku:
                     return (i, j)
         return (-1, -1)
 
+    def backtracking(self):
+        """
+        -------------------------------------------------------
+        Returns solved sudoku puzzle using backtracking(recursive)
+        Parameters: self - Matrix
+        Return: Boolean values
+        -------------------------------------------------------
+        """
+        index = self.find_empty()
+        if index == (-1, -1):
+            return True
+        else:
+            row = index[0]
+            col = index[1]
+        for i in range(1, 10):
+            if self.is_valid() == True:
+                self.table[row][col] = i
+                if self.backtracking() == True:
+                    return True
+                self.table[row][col] = 0
+        return False
+
 def main():
     sud = Sudoku()
     sud.print_table()
