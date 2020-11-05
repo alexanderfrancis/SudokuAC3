@@ -31,7 +31,7 @@ class Sudoku:
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
-            self.table = [[0 for i in range(9)] for j in range(9)]
+            self.table = [[Node(0) for i in range(9)] for j in range(9)]
         else:
             self.table = [[0 for i in range(9)] for j in range(9)]
             for i in range(len(lines)):
