@@ -138,6 +138,19 @@ class Sudoku:
 
         return True
 
+def find_empty(self):
+        """
+        -------------------------------------------------------
+        Returns index of next empty box
+        Parameters: self - Matrix
+        Return: index - (row, column) - tuple that returns next empty square
+        -------------------------------------------------------
+        """
+        for i in range(9):
+            for j in range(9):
+                if self.table[i][j] == 0:
+                    return (i, j)
+        return (-1, -1)
 
 def main():
     sud = Sudoku()
