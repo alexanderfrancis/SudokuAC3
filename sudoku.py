@@ -145,6 +145,7 @@ def main():
     sud.print_table()
     print(sud.is_valid())
     print(sud.is_valid())
+    print(sud.is_valid())
 
 if __name__ == "__main__":
     main()
