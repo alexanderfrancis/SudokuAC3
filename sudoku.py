@@ -38,6 +38,7 @@ class Sudoku:
             for i in range(len(lines)):
                 for j in range(len(self.table)):
                     self.table[i][j] = Node(int(lines[i][j]))
+                    if self.table[i][j].value !=0: self.table[i][j].domain = [self.table[i][j].value]
 
         f.close()
 
@@ -65,6 +66,13 @@ class Sudoku:
         #         print(y.value, end="")
 
         # print()
+
+    def print_domains(self):
+        for i in range(len(self.table)):
+            print()
+            print('-'*50)
+            for j in range(len(self.table)):
+                print(self.table[i][j].domain)
 
 
     def valid_col(self, col):
@@ -196,6 +204,7 @@ def main():
     sud = Sudoku()
     sud.print_table()
     print(sud.is_valid())
+    # sud.print_domains()
 
 if __name__ == "__main__":
     main()
