@@ -20,6 +20,10 @@ class Node:
     def __init__(self, value):
         self.value = value
 
+    def __int__(self):
+        
+        return int(self.value)
+
 class Sudoku:
 
     def __init__(self):
@@ -32,8 +36,7 @@ class Sudoku:
             self.table = [[0 for i in range(9)] for j in range(9)]
             for i in range(len(lines)):
                 for j in range(len(self.table)):
-                    #self.table[i][j] = Node(lines[i][j])
-                    self.table[i][j] = int(lines[i][j])
+                    self.table[i][j] = Node(int(lines[i][j]))
 
         f.close()
 
@@ -48,7 +51,7 @@ class Sudoku:
         print("-"*37)
         
         for i, row in enumerate(self.table):
-            print(("|" + " {}   {}   {} |"*3).format(*[x if x != 0 else " " for x in row]))
+            print(("|" + " {}   {}   {} |"*3).format(*[x.value if x.value != 0 else " " for x in row]))
             if i == 8:
                 print("-"*37)
             elif i % 3 == 2:
