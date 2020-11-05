@@ -88,9 +88,9 @@ class Sudoku:
         visited = []
         result = True
         for i in range(9):
-            if (not self.table[i][col] in visited):
-                if (self.table[i][col] != 0):
-                    visited.append(self.table[i][col])
+            if (not self.table[i][col].value in visited):
+                if (self.table[i][col].value != 0):
+                    visited.append(self.table[i][col].value)
             else:
                 return result == False
         return result
@@ -108,9 +108,9 @@ class Sudoku:
         visited = []
         result = True
         for i in range(9):
-            if (not self.table[row][i] in visited):
-                if (self.table[row][i] != 0):
-                    visited.append(self.table[row][i])
+            if (not self.table[row][i].value in visited):
+                if (self.table[row][i].value != 0):
+                    visited.append(self.table[row][i].value)
             else:
                 return result == False
         return result
@@ -149,9 +149,9 @@ class Sudoku:
 
         for row in range(r_index, r_index+3):
             for col in range(c_index, c_index+3):
-                if(not self.table[row][col] in visited):
-                    if (self.table[row][col] != 0):
-                        visited.append(self.table[row][col])
+                if(not self.table[row][col].value in visited):
+                    if (self.table[row][col].value != 0):
+                        visited.append(self.table[row][col].value)
                 else:
                     return result == False
         return result
@@ -174,7 +174,7 @@ class Sudoku:
         """
         for i in range(9):
             for j in range(9):
-                if self.table[i][j] == 0:
+                if self.table[i][j].value == 0:
                     return (i, j)
         return (-1, -1)
 
@@ -194,10 +194,10 @@ class Sudoku:
             col = index[1]
         for i in range(1, 10):
             if self.is_valid() == True:
-                self.table[row][col] = i
+                self.table[row][col].value = i
                 if self.backtracking() == True:
                     return True
-                self.table[row][col] = 0
+                self.table[row][col].value = 0
         return False
 
 def main():
