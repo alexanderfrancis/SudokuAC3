@@ -138,7 +138,7 @@ class Sudoku:
 
         return True
 
-def find_empty(self):
+    def find_empty(self):
         """
         -------------------------------------------------------
         Returns index of next empty box
