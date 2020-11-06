@@ -168,11 +168,11 @@ class Sudoku:
     def update_domain(self, row, col):
         """
         -------------------------------------------------------
-        Returns if a column is valid.
+        Returns updated domain for node object where value != 0.
         Parameters: self - Matrix
+                    row - row index
                     col - column index
-        Return: Boolean - True if no repeat numbers (1-9) exist
-                          in the column
+        Return: List - New domain
         -------------------------------------------------------
         """
         dom = [1,2,3,4,5,6,7,8,9]
