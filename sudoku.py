@@ -35,10 +35,14 @@ class Sudoku:
             self.table = [[Node(0) for i in range(9)] for j in range(9)]
         else:
             self.table = [[0 for i in range(9)] for j in range(9)]
-            for i in range(len(lines)):
+            for i in range(len(self.table)):
                 for j in range(len(self.table)):
                     self.table[i][j] = Node(int(lines[i][j]))
                     if self.table[i][j].value !=0: self.table[i][j].domain = [self.table[i][j].value]
+
+            for k in range(len(self.table)):
+                for l in range(len(self.table)):
+                    if self.table[k][l].value == 0: self.table[k][l].domain = self.update_domain(k,l)
 
         f.close()
 
@@ -67,12 +71,8 @@ class Sudoku:
 
         # print()
 
-    def print_domains(self):
-        for i in range(len(self.table)):
-            print()
-            print('-'*50)
-            for j in range(len(self.table)):
-                print(self.table[i][j].domain)
+    def print_domain(self, row, col):
+        print(self.table[row][col].domain)
 
 
     def valid_col(self, col):
@@ -175,7 +175,7 @@ class Sudoku:
                           in the column
         -------------------------------------------------------
         """
-        domain = [1,2,3,4,5,6,7,8,9]
+        dom = [1,2,3,4,5,6,7,8,9]
         visited = []
         if self.table[row][col].value == 0:
             for i in range(9):
@@ -212,13 +212,17 @@ class Sudoku:
                             visited.append(self.table[row][col].value)
             
             new_visited = []
-            for i in domain:
+            for i in dom:
                 if i not in visited:
                     new_visited.append(i)
 
+            # print(new_visited)
+
             visited = new_visited
-            self.table[row][col].domain = visited
+            # print(visited
             
+            return visited
+        return [self.table[row][col].value]
 
     def find_empty(self):
         """
@@ -261,8 +265,8 @@ def main():
     sud.print_table()
     print(sud.is_valid())
     
-    print(sud.update_domain(0,0))
-    # sud.print_domains()
+    # sud.table[1][0].domain = sud.update_domain(1,0)
+    sud.print_domain(0,1)
 
 if __name__ == "__main__":
     main()
