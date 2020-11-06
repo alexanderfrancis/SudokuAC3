@@ -28,7 +28,7 @@ class Node:
 class Sudoku:
 
     def __init__(self):
-        f = open('sudoku1.txt', 'r')
+        f = open('sudoku5.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -246,27 +246,45 @@ class Sudoku:
         Return: Boolean values
         -------------------------------------------------------
         """
-        index = self.find_empty()
+        index = self.find_min_con()
         if index == (-1, -1):
             return True
         else:
             row = index[0]
             col = index[1]
-        for i in range(1, 10):
+
+        self.table[row][col].domain = self.update_domain(row, col)
+        for i in self.table[row][col].domain:
             if self.is_valid() == True:
                 self.table[row][col].value = i
                 if self.backtracking() == True:
                     return True
                 self.table[row][col].value = 0
+        
         return False
+
+    def find_min_con(self):
+        """
+        -------------------------------------------------------
+        Returns index of next empty node with the smallest domain
+        Parameters: self - Matrix
+        Return: index - (row, col) 
+        -------------------------------------------------------
+        """
+        temp_min = [1,2,3,4,5,6,7,8,9]
+        index = (-1,-1)
+        for i in range(9):
+            for j in range(9):
+                if len(self.table[i][j].domain) < len(temp_min) and self.table[i][j].value == 0:
+                    temp_min = self.table[i][j].domain
+                    index = (i,j)
+        return index
 
 def main():
     sud = Sudoku()
     sud.print_table()
-    print(sud.is_valid())
-    
-    # sud.table[1][0].domain = sud.update_domain(1,0)
-    sud.print_domain(0,1)
+    sud.backtracking()
+    sud.print_table()
 
 if __name__ == "__main__":
     main()
