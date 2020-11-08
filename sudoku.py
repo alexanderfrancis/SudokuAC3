@@ -280,11 +280,29 @@ class Sudoku:
                     index = (i,j)
         return index
 
+    def MRV_heuristic(self):
+        """
+        -------------------------------------------------------
+        Finds the minimum remaining value.
+        Parameters: self - Matrix
+        Return: index - (row, col) 
+        -------------------------------------------------------
+        """
+        temp_min = [1,2,3,4,5,6,7,8,9]
+        index = (-1,-1)
+        for i in range(9):
+            for j in range(9):
+                if len(self.table[i][j].domain) < len(temp_min) and self.table[i][j].value == 0:
+                    temp_min = self.table[i][j].domain
+                    index = (i,j)
+        return index
+
 def main():
     sud = Sudoku()
     sud.print_table()
     sud.backtracking()
     sud.print_table()
+    print(sud.is_valid())
 
 if __name__ == "__main__":
     main()
