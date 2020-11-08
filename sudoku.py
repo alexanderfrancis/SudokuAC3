@@ -331,9 +331,9 @@ class Sudoku:
                     constraints.append((self.table[i][j],self.table[i][j].neighbours[k]))
 
 
-                    if (i==0 and j==1):
-                        print("i",i," ","j",j)
-                        print((self.table[i][j].value,self.table[i][j].neighbours[k].value))
+                    # if (i==0 and j==1):
+                    #     #print("i",i," ","j",j)
+                    #     print((self.table[i][j].value,self.table[i][j].neighbours[k].value))
 
         return constraints
 
@@ -365,12 +365,14 @@ class Sudoku:
                         for j in range(len(neighbour.neighbours)):
                             if (neighbour.neighbours[j]==arc[0]):
                                 neighbour.neighbours[j]=revised[1]
-                                print("domain neigh before",arc[0].domain)
-                                print("domain neigh after",revised[1].domain)
+                                #print("domain neigh before",arc[0].domain)
+                                #print("domain neigh after",revised[1].domain)
                                 
                         cons_q.insert((neighbour,revised[1]))
 
         return True
+
+        
 
     def revise(self,x,y):
 
@@ -385,58 +387,51 @@ class Sudoku:
                 if i!=j:
                     invalid=False
             if invalid:
-                print("--------------")
-                print("before removing",x.domain)
-                print("removing",i)
+                #print("--------------")
+                #print("before removing",x.domain)
+                #print("removing",i)
                 x.domain.remove(i)
-                print("new domain",x.domain)
+                #print("new domain",x.domain)
                 self.table[x.row][x.col]=x
-                print("new node domain",self.table[x.row][x.col].domain)
+                #print("new node domain",self.table[x.row][x.col].domain)
                 revised=True
                 return_node=self.table[x.row][x.col]
   
 
         return revised, return_node
 
+    def AC3_table(self):
+        for i in range(9):
+            for j in range(9):
+                if (len(self.table[i][j].domain) == 1):
+                    value = self.table[i][j].domain[0]
+                    self.table[i][j].value = value
+        return
+
 
 
 def main():
     sud = Sudoku()
+
+    print("BEFORE: ")
     sud.print_table()
-    print(sud.is_valid())
-    
-    # sud.table[1][0].domain = sud.update_domain(1,0)
-    for row in range(len(sud.table)):
-        for col in range(len(sud.table)):
-            sud.print_domain(row,col)
-
-
-    neighbors=sud.find_neighbours(0,0)
-
-    for i in neighbors:
-        print(i.value,end=" ")
-
-
     print()
-    # for kim in sud.table[0][0].neighbours:
-    #     print(kim.value,end=' ')
-
+    
+    print("AFTER AC3: ")
     constraints=sud.constraints()
-    # print("constraints",constraints)
-    # print()
-    # for i in range(40):
-        
-    #     print(constraints[i][0].value," ",constraints[i][1].value)
+    sud.AC3(constraints)
 
-    for row in range(len(sud.table)):
-        for col in range(len(sud.table)):
-            sud.print_domain(row,col)
+    # for row in range(len(sud.table)):
+    #     for col in range(len(sud.table)):
+    #         sud.print_domain(row,col)
 
-    print("results of AC3",sud.AC3(constraints))
+    sud.AC3_table()
+    sud.print_table()
+    print()
 
-    for row in range(len(sud.table)):
-        for col in range(len(sud.table)):
-            sud.print_domain(row,col)
+    print("AFTER BACKTRACKING: ")
+    sud.backtracking()
+    sud.print_table()
 
  
 if __name__ == "__main__":
