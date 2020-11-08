@@ -17,9 +17,12 @@ class Node:
     domain = [1,2,3,4,5,6,7,8,9]
     value = 0
 
-    def __init__(self, value, domain = domain):
+    def __init__(self, value, domain = domain,row=0,col=0):
         self.value = value
         self.domain = domain
+        self.neighbours=[]
+        self.row=row
+        self.col=col
 
     def __int__(self):
         
@@ -28,7 +31,7 @@ class Node:
 class Sudoku:
 
     def __init__(self):
-        f = open('sudoku1.txt', 'r')
+        f = open('sudoku2.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -38,7 +41,11 @@ class Sudoku:
             for i in range(len(self.table)):
                 for j in range(len(self.table)):
                     self.table[i][j] = Node(int(lines[i][j]))
-                    if self.table[i][j].value !=0: self.table[i][j].domain = [self.table[i][j].value]
+                    self.table[i][j].row=i
+                    self.table[i][j].col=j
+                    if self.table[i][j].value !=0: 
+                        self.table[i][j].domain = [self.table[i][j].value]
+
 
             for k in range(len(self.table)):
                 for l in range(len(self.table)):
@@ -260,13 +267,168 @@ class Sudoku:
                 self.table[row][col].value = 0
         return False
 
+    def find_neighbours(self,i,j):
+        neighbours=[]
+        original_i=i
+        original_j=j
+
+    
+        for k in range (len(self.table)):
+            if (not self.table[i][k] in neighbours and self.table[i][k]!=self.table[original_i][original_j]):
+                neighbours.append(self.table[i][k])
+
+
+
+        for l in range (len(self.table)):
+            if (not self.table[l][j] in neighbours and self.table[l][j]!=self.table[original_i][original_j]):
+                neighbours.append(self.table[l][j])
+
+
+        r = False
+        c = False
+        while r == False or c == False:
+            if(r == False):
+                if(i%3 == 0):
+                    r = True
+                else:
+                    i -= 1
+
+            if(c == False):
+                if(j%3 == 0):
+                    c = True
+                else:
+                    j -= 1
+
+        for row in range(i, i+3):
+            for col in range(j, j+3):
+                if(not self.table[row][col] in neighbours and self.table[row][col]!=self.table[original_i][original_j]  ):
+
+                    neighbours.append(self.table[row][col])
+
+        self.table[original_i][original_j].neighbours=neighbours
+
+        return neighbours
+
+    def constraints(self):
+
+        constraints=[]
+
+        for i in range (len(self.table)):
+            for j in range (len(self.table)):
+
+                neighbours=self.find_neighbours(i,j)
+
+                for k in range (len(neighbours)):
+
+                    constraints.append((self.table[i][j],self.table[i][j].neighbours[k]))
+
+
+                    if (i==0 and j==1):
+                        print("i",i," ","j",j)
+                        print((self.table[i][j].value,self.table[i][j].neighbours[k].value))
+
+        return constraints
+
+    def AC3(self,constraints):
+        cons_q=utilities.Queue()
+
+ 
+
+        for i in constraints:
+            cons_q.insert(i)
+            # print(i[0].value)
+        
+        while (cons_q.is_empty()==False):
+            arc=cons_q.remove()
+            # print(arc)
+
+            revised=self.revise(arc[0],arc[1])
+            #print("revised value", revised)
+            if (revised[0]):
+                
+                               
+
+                if (len(revised[1].domain)==0):
+                    return False
+
+
+                for neighbour in revised[1].neighbours:
+                    if (neighbour!=arc[1]):
+                        for j in range(len(neighbour.neighbours)):
+                            if (neighbour.neighbours[j]==arc[0]):
+                                neighbour.neighbours[j]=revised[1]
+                                print("domain neigh before",arc[0].domain)
+                                print("domain neigh after",revised[1].domain)
+                        cons_q.insert((neighbour,revised[1]))
+
+        return True
+
+    def revise(self,x,y):
+
+        #rint("X-domain",x.domain)
+        #print("y-domain",y.domain)
+        revised=False
+        return_node=x
+        
+        for i in x.domain:
+            invalid=True
+            for j in y.domain:
+                if i!=j:
+                    invalid=False
+            if invalid:
+                print("--------------")
+                print("before removing",x.domain)
+                print("removing",i)
+                x.domain.remove(i)
+                print("new domain",x.domain)
+                self.table[x.row][x.col]=x
+                print("new node domain",self.table[x.row][x.col].domain)
+                revised=True
+                return_node=self.table[x.row][x.col]
+  
+
+        return revised, return_node
+
+
+
 def main():
     sud = Sudoku()
     sud.print_table()
     print(sud.is_valid())
     
     # sud.table[1][0].domain = sud.update_domain(1,0)
-    sud.print_domain(0,1)
+    for row in range(len(sud.table)):
+        for col in range(len(sud.table)):
+            sud.print_domain(row,col)
 
+
+    neighbors=sud.find_neighbours(0,0)
+
+    for i in neighbors:
+        print(i.value,end=" ")
+
+
+    print()
+    # for kim in sud.table[0][0].neighbours:
+    #     print(kim.value,end=' ')
+
+    constraints=sud.constraints()
+    # print("constraints",constraints)
+    # print()
+    # for i in range(40):
+        
+    #     print(constraints[i][0].value," ",constraints[i][1].value)
+
+    for row in range(len(sud.table)):
+        for col in range(len(sud.table)):
+            sud.print_domain(row,col)
+
+    print("results of AC3",sud.AC3(constraints))
+
+    for row in range(len(sud.table)):
+        for col in range(len(sud.table)):
+            sud.print_domain(row,col)
+
+ 
 if __name__ == "__main__":
     main()
