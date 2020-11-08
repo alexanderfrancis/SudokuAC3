@@ -253,19 +253,39 @@ class Sudoku:
         Return: Boolean values
         -------------------------------------------------------
         """
-        index = self.find_empty()
+        index = self.MRV_heuristic()
         if index == (-1, -1):
             return True
         else:
             row = index[0]
             col = index[1]
-        for i in range(1, 10):
+
+        self.table[row][col].domain = self.update_domain(row, col)
+        for i in self.table[row][col].domain:
             if self.is_valid() == True:
                 self.table[row][col].value = i
                 if self.backtracking() == True:
                     return True
                 self.table[row][col].value = 0
+        
         return False
+
+    def MRV_heuristic(self):
+        """
+        -------------------------------------------------------
+        Finds the minimum remaining value.
+        Parameters: self - Matrix
+        Return: index - (row, col) 
+        -------------------------------------------------------
+        """
+        temp_min = [1,2,3,4,5,6,7,8,9]
+        index = (-1,-1)
+        for i in range(9):
+            for j in range(9):
+                if len(self.table[i][j].domain) < len(temp_min) and self.table[i][j].value == 0:
+                    temp_min = self.table[i][j].domain
+                    index = (i,j)
+        return index
 
     def find_neighbours(self,i,j):
         neighbours=[]
@@ -346,7 +366,7 @@ class Sudoku:
             #print("revised value", revised)
             if (revised[0]):
                 
-                               
+
 
                 if (len(revised[1].domain)==0):
                     return False
@@ -359,6 +379,7 @@ class Sudoku:
                                 neighbour.neighbours[j]=revised[1]
                                 print("domain neigh before",arc[0].domain)
                                 print("domain neigh after",revised[1].domain)
+                                
                         cons_q.insert((neighbour,revised[1]))
 
         return True
