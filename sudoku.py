@@ -246,7 +246,7 @@ class Sudoku:
         Return: Boolean values
         -------------------------------------------------------
         """
-        index = self.find_min_con()
+        index = self.MRV_heuristic()
         if index == (-1, -1):
             return True
         else:
@@ -262,23 +262,6 @@ class Sudoku:
                 self.table[row][col].value = 0
         
         return False
-
-    def find_min_con(self):
-        """
-        -------------------------------------------------------
-        Returns index of next empty node with the smallest domain
-        Parameters: self - Matrix
-        Return: index - (row, col) 
-        -------------------------------------------------------
-        """
-        temp_min = [1,2,3,4,5,6,7,8,9]
-        index = (-1,-1)
-        for i in range(9):
-            for j in range(9):
-                if len(self.table[i][j].domain) < len(temp_min) and self.table[i][j].value == 0:
-                    temp_min = self.table[i][j].domain
-                    index = (i,j)
-        return index
 
     def MRV_heuristic(self):
         """
