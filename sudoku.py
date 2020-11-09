@@ -16,19 +16,30 @@ import utilities
 class Node:
     domain = [1,2,3,4,5,6,7,8,9]
     value = 0
-
-    def __init__(self, value, domain = domain):
+    def __init__(self, value, domain = domain,row=0,col=0):
         self.value = value
         self.domain = domain
+        self.neighbours=[]
+        self.row=row
+        self.col=col
+        return
+
 
     def __int__(self):
-        
         return int(self.value)
 
-class Sudoku:
 
+class Sudoku:
     def __init__(self):
-        f = open('sudoku5.txt', 'r')
+        """
+        -------------------------------------------------------
+        Populates sodoku puzzle
+        Parameters: self - Matrix
+        Return: None
+        -------------------------------------------------------
+        """
+        self.lvalues = []
+        f = open('sudoku1.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -37,25 +48,29 @@ class Sudoku:
             self.table = [[0 for i in range(9)] for j in range(9)]
             for i in range(len(self.table)):
                 for j in range(len(self.table)):
+                    self.lvalues.append(int(lines[i][j]))
                     self.table[i][j] = Node(int(lines[i][j]))
-                    if self.table[i][j].value !=0: self.table[i][j].domain = [self.table[i][j].value]
-
+                    self.table[i][j].row=i
+                    self.table[i][j].col=j
+                    if self.table[i][j].value !=0: 
+                        self.table[i][j].domain = [self.table[i][j].value]
             for k in range(len(self.table)):
                 for l in range(len(self.table)):
                     if self.table[k][l].value == 0: self.table[k][l].domain = self.update_domain(k,l)
-
         f.close()
-
-    def __eq__(self, sudoku2):
-        if self.table == sudoku2.table:
-            return True
-        return False
+        return
 
 
     # Code taken from https://stackoverflow.com/questions/37952851/formating-sudoku-grids-python-3
     def print_table(self):
+        """
+        -------------------------------------------------------
+        Prints sodoku puzzle
+        Parameters: self - Matrix
+        Return: None
+        -------------------------------------------------------
+        """
         print("-"*37)
-        
         for i, row in enumerate(self.table):
             print(("|" + " {}   {}   {} |"*3).format(*[x.value if x.value != 0 else " " for x in row]))
             if i == 8:
@@ -64,15 +79,21 @@ class Sudoku:
                 print("|" + "---+"*8 + "---|")
             else:
                 print("|" + "   +"*8 + "   |")
+        return
 
-        # for x in self.table:
-        #     for y in x:
-        #         print(y.value, end="")
-
-        # print()
 
     def print_domain(self, row, col):
+        """
+        -------------------------------------------------------
+        Prints domain of Node at specified index
+        Parameters: self - Matrix
+                    row - row index
+                    col - column index
+        Return: None
+        -------------------------------------------------------
+        """
         print(self.table[row][col].domain)
+        return
 
 
     def valid_col(self, col):
@@ -81,8 +102,8 @@ class Sudoku:
         Returns if a column is valid.
         Parameters: self - Matrix
                     col - column index
-        Return: Boolean - True if no repeat numbers (1-9) exist
-                          in the column
+        Return: Boolean - True if no repeat numbers (1-9) exist in the column
+                          False if repeat numbers in column
         -------------------------------------------------------
         """
         visited = []
@@ -95,14 +116,15 @@ class Sudoku:
                 return result == False
         return result
             
+
     def valid_row(self, row):
         """
         -------------------------------------------------------
         Returns if a row is valid.
         Parameters: self - Matrix
                     row - row index
-        Return: Boolean - True is no repeat numbers (1-9) exist
-                          in the row
+        Return: Boolean - True if no repeat numbers (1-9) exist in the row
+                          False if repeat numbers in row
         -------------------------------------------------------
         """
         visited = []
@@ -115,6 +137,7 @@ class Sudoku:
                 return result == False
         return result
 
+
     def valid_subsquare(self, row, col):
         """
         -------------------------------------------------------
@@ -122,15 +145,14 @@ class Sudoku:
         Parameters: self - Matrix
                     col - column index
                     row - row index
-        Return: Boolean - True is no repeat numbers (1-9) exist
-                          in the subsquare
+        Return: Boolean - True if no repeat numbers (1-9) exist in the subsquare
+                          False if repeat numbers in subsquare
         -------------------------------------------------------
         """
         visited = []
         result = True
         r_index = row
         c_index = col
-
         #Find top left index of subsquare
         r = False
         c = False
@@ -140,13 +162,11 @@ class Sudoku:
                     r = True
                 else:
                     r_index -= 1
-
             if(c == False):
                 if(c_index%3 == 0):
                     c = True
                 else:
                     c_index -= 1
-
         for row in range(r_index, r_index+3):
             for col in range(c_index, c_index+3):
                 if(not self.table[row][col].value in visited):
@@ -156,19 +176,30 @@ class Sudoku:
                     return result == False
         return result
 
+
     def is_valid(self):
+        """
+        -------------------------------------------------------
+        Returns if a Sudoku puzzle is valid. Checks each node to see if row, col
+        and subsquares are valid.
+        Parameters: self - Matrix
+                    col - column index
+                    row - row index
+        Return: Boolean - True if valid
+                          False if not valid
+        -------------------------------------------------------
+        """
         for i in range(9):
             for j in range(9):
                 if self.valid_row(i) == False or self.valid_col(j) == False or self.valid_subsquare(i, j) == False:
                     return False
-
         return True
 
 
     def update_domain(self, row, col):
         """
         -------------------------------------------------------
-        Returns updated domain for node object where value != 0.
+        Returns updated domain for node object where node value does not equal 0.
         Parameters: self - Matrix
                     row - row index
                     col - column index
@@ -181,15 +212,11 @@ class Sudoku:
             for i in range(9):
                 if not self.table[i][col].value == 0 and not self.table[i][col] in visited:
                     visited.append(self.table[i][col].value)
-            
             for i in range(9):
                 if not self.table[row][i].value == 0 and not self.table[row][i] in visited:
                     visited.append(self.table[row][i].value)
-
             r_index = row
             c_index = col
-
-            #Find top left index of subsquare
             r = False
             c = False
             while r == False or c == False:
@@ -198,38 +225,31 @@ class Sudoku:
                         r = True
                     else:
                         r_index -= 1
-
                 if(c == False):
                     if(c_index%3 == 0):
                         c = True
                     else:
                         c_index -= 1
-
             for row in range(r_index, r_index+3):
                 for col in range(c_index, c_index+3):
                     if(not self.table[row][col].value in visited):
                         if (self.table[row][col].value != 0):
                             visited.append(self.table[row][col].value)
-            
             new_visited = []
             for i in dom:
                 if i not in visited:
                     new_visited.append(i)
-
-            # print(new_visited)
-
             visited = new_visited
-            # print(visited
-            
             return visited
         return [self.table[row][col].value]
+
 
     def backtracking(self):
         """
         -------------------------------------------------------
-        Returns solved sudoku puzzle using backtracking(recursive)
+        Resursively solves sodoku puzzles using backtracking
         Parameters: self - Matrix
-        Return: Boolean values
+        Return: Boolean
         -------------------------------------------------------
         """
         index = self.MRV_heuristic()
@@ -238,7 +258,6 @@ class Sudoku:
         else:
             row = index[0]
             col = index[1]
-
         self.table[row][col].domain = self.update_domain(row, col)
         for i in self.table[row][col].domain:
             if self.is_valid() == True:
@@ -246,8 +265,8 @@ class Sudoku:
                 if self.backtracking() == True:
                     return True
                 self.table[row][col].value = 0
-        
         return False
+
 
     def MRV_heuristic(self):
         """
@@ -266,12 +285,114 @@ class Sudoku:
                     index = (i,j)
         return index
 
+
+    def find_neighbours(self,i,j):
+        neighbours=[]
+        original_i=i
+        original_j=j
+        for k in range (len(self.table)):
+            if (not self.table[i][k] in neighbours and self.table[i][k]!=self.table[original_i][original_j]):
+                neighbours.append(self.table[i][k])
+        for l in range (len(self.table)):
+            if (not self.table[l][j] in neighbours and self.table[l][j]!=self.table[original_i][original_j]):
+                neighbours.append(self.table[l][j])
+        r = False
+        c = False
+        while r == False or c == False:
+            if(r == False):
+                if(i%3 == 0):
+                    r = True
+                else:
+                    i -= 1
+            if(c == False):
+                if(j%3 == 0):
+                    c = True
+                else:
+                    j -= 1
+        for row in range(i, i+3):
+            for col in range(j, j+3):
+                if(not self.table[row][col] in neighbours and self.table[row][col]!=self.table[original_i][original_j]):
+                    neighbours.append(self.table[row][col])
+        self.table[original_i][original_j].neighbours=neighbours
+        return neighbours
+
+
+    def constraints(self):
+        constraints=[]
+        for i in range (len(self.table)):
+            for j in range (len(self.table)):
+                neighbours=self.find_neighbours(i,j)
+                for k in range (len(neighbours)):
+                    constraints.append((self.table[i][j],self.table[i][j].neighbours[k]))
+        return constraints
+
+
+    def AC3(self,constraints):
+        cons_q=utilities.Queue()
+        for i in constraints:
+            cons_q.insert(i)
+        while (cons_q.is_empty()==False):
+            arc=cons_q.remove()
+            for i in range(len(self.table)):
+                for k in range (len(self.table)):
+                    if (self.table[i][k].row==arc[0].row and self.table[i][k].col==arc[0].col):
+                        node=self.table[i][k]
+            revised=self.revise(node,arc[1])
+            if (revised[0]):
+                if (len(revised[1].domain)==0):
+                    return False
+                for neighbour in revised[1].neighbours:
+                    if (neighbour!=arc[1]):
+                        for j in range(len(neighbour.neighbours)):
+                            if (neighbour.neighbours[j]==node):
+                                neighbour.neighbours[j]=revised[1]
+                        cons_q.insert((neighbour,revised[1]))
+        return True
+
+        
+    def revise(self,x,y):
+        revised=False
+        return_node=x
+        for i in x.domain:
+            invalid=True
+            for j in y.domain:
+                if i!=j:
+                    invalid=False
+            if invalid:
+                x.domain.remove(i)
+                self.table[x.row][x.col]=x
+                revised=True
+                return_node=self.table[x.row][x.col]
+        return revised, return_node
+
+
+    def AC3_table(self):
+        for i in range(9):
+            for j in range(9):
+                if (len(self.table[i][j].domain) == 1):
+                    value = self.table[i][j].domain[0]
+                    self.table[i][j].value = value
+        return
+
+
 def main():
     sud = Sudoku()
+
+    print("BEFORE: ")
     sud.print_table()
+    print()
+
+    print("AFTER AC3: ")
+    constraints=sud.constraints()
+    val = sud.AC3(constraints)
+    print("Is solvable using AC3: ", val)
+    sud.AC3_table()
+    sud.print_table()
+    print()
+
+    print("AFTER BACKTRACKING: ")
     sud.backtracking()
     sud.print_table()
-    print(sud.is_valid())
 
 if __name__ == "__main__":
     main()
