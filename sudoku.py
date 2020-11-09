@@ -287,6 +287,15 @@ class Sudoku:
 
 
     def find_neighbours(self,i,j):
+        """
+        -------------------------------------------------------
+        Finds the nodes which constraints of current node called neighbours in this case
+        Parameters: self - Sudoku 
+                    i- row
+                    j-column
+        Return: neighbours- list of nodes which are all "neighbours" or constraints of the node in position i,j
+        -------------------------------------------------------
+        """
         neighbours=[]
         original_i=i
         original_j=j
@@ -318,6 +327,13 @@ class Sudoku:
 
 
     def constraints(self):
+        """
+        -------------------------------------------------------
+        Gets constraints and arranges in arc pairs
+        Parameters: self - Sudoku 
+        Return: constraints - list of tuples with a constraint pairs
+        -------------------------------------------------------
+        """
         constraints=[]
         for i in range (len(self.table)):
             for j in range (len(self.table)):
@@ -328,6 +344,14 @@ class Sudoku:
 
 
     def AC3(self,constraints):
+        """
+        -------------------------------------------------------
+        Arc consistancy algorithm which makes every variable arc-consistent
+        Parameters: self - Sudoku 
+                    constraints- constraints in pairs (node,neighbour)
+        Return: Boolean - True if no inconsistancies found and False otherwise
+        -------------------------------------------------------
+        """
         cons_q=utilities.Queue()
         for i in constraints:
             cons_q.insert(i)
@@ -351,6 +375,16 @@ class Sudoku:
 
         
     def revise(self,x,y):
+        """
+        -------------------------------------------------------
+        Checks if theres a a value in x.domain that does not satisfy
+        the constraint between c and y
+        Parameters: self - Sudoku 
+                    x- node which will be revising domain
+                    y- neighbour
+        Return: revised - Boolean if domain of x was changed will return true else false
+        -------------------------------------------------------
+        """
         revised=False
         return_node=x
         for i in x.domain:
@@ -367,6 +401,13 @@ class Sudoku:
 
 
     def AC3_table(self):
+        """
+        -------------------------------------------------------
+        Populates table by using updated domains per Node
+        Parameters: self - Sudoku 
+        Return: revised - None
+        -------------------------------------------------------
+        """
         for i in range(9):
             for j in range(9):
                 if (len(self.table[i][j].domain) == 1):
