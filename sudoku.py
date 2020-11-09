@@ -372,7 +372,7 @@ class Sudoku:
                             if (neighbour.neighbours[j]==node):
                                 neighbour.neighbours[j]=revised[1]
                         cons_q.insert((neighbour,revised[1]))
-                        
+
             print("length of queue: ",len(cons_q))
         return True
 
@@ -432,6 +432,7 @@ def main():
     print("Is solvable using AC3: ", val)
     sud.AC3_table()
     sud.print_table()
+    print()
     print()
 
     print("AFTER BACKTRACKING: ")
