@@ -40,7 +40,7 @@ class Sudoku:
         -------------------------------------------------------
         """
         self.lvalues = []
-        f = open('sudoku8.txt', 'r')
+        f = open('sudoku7.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -426,7 +426,6 @@ class Sudoku:
 
 
 def main():
-    start = time.time()
     sud = Sudoku()
 
     print("BEFORE: ")
@@ -436,15 +435,27 @@ def main():
     print("AFTER AC3: ")
     constraints=sud.constraints()
     sud.AC3(constraints)
+    # print("Is solvable using AC3: ", val)
     sud.AC3_table()
     sud.print_table()
     print()
+    flag=True
+    for i in range (len(sud.table)):
+        for j in range(len(sud.table)):
+            if (sud.table[i][j].value==0):
+                flag=False
+                break
 
-    print("AFTER BACKTRACKING: ")
-    sud.backtracking()
-    sud.print_table()
-
-    print("Total Execution Time: %s seconds"%(time.time()-start))
+    if(flag==True):
+        print("The AC-3 algorithm was able to solve the Sudoku Puzzle")
+    else:
+        print("The AC-3 algorithm was NOT able to fully solve the Sudoku Puzzle")
+        print()
+        print("backtracking will solve the Sudoku")
+        print()
+        print("AFTER BACKTRACKING: ")
+        sud.backtracking()
+        sud.print_table()
 
 if __name__ == "__main__":
     main()
