@@ -340,30 +340,37 @@ class Sudoku:
     def AC3(self,constraints):
         cons_q=utilities.Queue()
 
- 
-
         for i in constraints:
             cons_q.insert(i)
             # print(i[0].value)
-        
+
+
+
         while (cons_q.is_empty()==False):
             arc=cons_q.remove()
             # print(arc)
 
-            revised=self.revise(arc[0],arc[1])
+            for i in range(len(self.table)):
+                for k in range (len(self.table)):
+                    if (self.table[i][k].row==arc[0].row and self.table[i][k].col==arc[0].col):
+                        node=self.table[i][k]
+        
+
+            revised=self.revise(node,arc[1])
+
             #print("revised value", revised)
             if (revised[0]):
-                
-
-
                 if (len(revised[1].domain)==0):
                     return False
+
+
+
 
 
                 for neighbour in revised[1].neighbours:
                     if (neighbour!=arc[1]):
                         for j in range(len(neighbour.neighbours)):
-                            if (neighbour.neighbours[j]==arc[0]):
+                            if (neighbour.neighbours[j]==node):
                                 neighbour.neighbours[j]=revised[1]
                                 #print("domain neigh before",arc[0].domain)
                                 #print("domain neigh after",revised[1].domain)
