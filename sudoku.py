@@ -332,7 +332,7 @@ class Sudoku:
 
     """
     -------------------------------------------------------
-    constraints- 
+    constraints- gets constraints and arranges in arc pairs
     Parameters: self - Sudoku 
     Return: constraints - list of tuples with a constraint pairs
     -------------------------------------------------------
