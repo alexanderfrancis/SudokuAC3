@@ -10,7 +10,8 @@ __updated__ = "2020-11-09"
 -------------------------------------------------------
 """
 import utilities
-# Some Sudoku puzzle examples taken from here:
+import time
+# Some Sudoku puzzle challenges taken from here:
 # https://dingo.sbs.arizona.edu/~sandiway/sudoku/examples.html
 
 class Node:
@@ -39,7 +40,7 @@ class Sudoku:
         -------------------------------------------------------
         """
         self.lvalues = []
-        f = open('sudoku7.txt', 'r')
+        f = open('sudoku8.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -61,24 +62,30 @@ class Sudoku:
         return
 
 
-    # Code taken from https://stackoverflow.com/questions/37952851/formating-sudoku-grids-python-3
     def print_table(self):
         """
         -------------------------------------------------------
         Prints sodoku puzzle
         Parameters: self - Matrix
-        Return: None
         -------------------------------------------------------
         """
-        print("-"*37)
-        for i, row in enumerate(self.table):
-            print(("|" + " {}   {}   {} |"*3).format(*[x.value if x.value != 0 else " " for x in row]))
-            if i == 8:
-                print("-"*37)
-            elif i % 3 == 2:
-                print("|" + "---+"*8 + "---|")
-            else:
-                print("|" + "   +"*8 + "   |")
+        print("-"*31)
+        i = 0
+        for x in self.table:
+            for y in x:
+                if i % 9 == 0:
+                    print("|", end="")
+                if y.value == 0:
+                    print(" {} ".format(" "), end="")
+                else:    
+                    print(" {} ".format(y.value), end="")
+                i += 1
+                if i % 3 == 0:
+                    print('|', end="")
+                if i % 9 == 0 and i != 0:
+                    print()
+                if i % 27 == 0:
+                    print("-"*31)
         return
 
 
@@ -372,7 +379,6 @@ class Sudoku:
                             if (neighbour.neighbours[j]==node):
                                 neighbour.neighbours[j]=revised[1]
                         cons_q.insert((neighbour,revised[1]))
-
             print("length of queue: ",len(cons_q))
         return True
 
@@ -420,6 +426,7 @@ class Sudoku:
 
 
 def main():
+    start = time.time()
     sud = Sudoku()
 
     print("BEFORE: ")
@@ -428,16 +435,16 @@ def main():
 
     print("AFTER AC3: ")
     constraints=sud.constraints()
-    val = sud.AC3(constraints)
-    print("Is solvable using AC3: ", val)
+    sud.AC3(constraints)
     sud.AC3_table()
     sud.print_table()
-    print()
     print()
 
     print("AFTER BACKTRACKING: ")
     sud.backtracking()
     sud.print_table()
+
+    print("Total Execution Time: %s seconds"%(time.time()-start))
 
 if __name__ == "__main__":
     main()
