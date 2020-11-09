@@ -275,6 +275,18 @@ class Sudoku:
                     index = (i,j)
         return index
 
+
+    """
+    -------------------------------------------------------
+    find_neighbours- finds the nodes which constraints of current node called neighbours in this case
+    Parameters: self - Sudoku 
+                 i- row
+                 j-column
+
+    Return: neighbours- list of nodes which are all "neighbours" or constraints of the node in position i,j
+    -------------------------------------------------------
+    """
+
     def find_neighbours(self,i,j):
         neighbours=[]
         original_i=i
@@ -317,6 +329,15 @@ class Sudoku:
 
         return neighbours
 
+
+    """
+    -------------------------------------------------------
+    constraints- 
+    Parameters: self - Sudoku 
+    Return: constraints - list of tuples with a constraint pairs
+    -------------------------------------------------------
+    """
+
     def constraints(self):
 
         constraints=[]
@@ -336,6 +357,15 @@ class Sudoku:
                     #     print((self.table[i][j].value,self.table[i][j].neighbours[k].value))
 
         return constraints
+
+    """
+    -------------------------------------------------------
+    AC3- arc consistancy algorithm which makes every variable arc-consistent
+    Parameters: self - Sudoku 
+                constraints- constraints in pairs (node,neighbour)
+    Return: Boolean - True if no inconsistancies found and False otherwise
+    -------------------------------------------------------
+    """
 
     def AC3(self,constraints):
         cons_q=utilities.Queue()
@@ -379,6 +409,16 @@ class Sudoku:
 
         return True
 
+    """
+    -------------------------------------------------------
+    revise- checks if theres a a value in x.domain that does not satisfy
+    the constraint between c and y
+    Parameters: self - Sudoku 
+                x- node which will be revising domain
+                y- neighbour
+    Return: revised - Boolean if domain of x was changed will return true else false
+    -------------------------------------------------------
+    """
         
 
     def revise(self,x,y):
@@ -389,11 +429,11 @@ class Sudoku:
         return_node=x
         
         for i in x.domain:
-            invalid=True
+            not_satisfied=True
             for j in y.domain:
                 if i!=j:
-                    invalid=False
-            if invalid:
+                    not_satisfied=False
+            if not_satisfied:
                 #print("--------------")
                 #print("before removing",x.domain)
                 #print("removing",i)
