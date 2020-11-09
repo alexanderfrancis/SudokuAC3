@@ -39,7 +39,7 @@ class Sudoku:
         -------------------------------------------------------
         """
         self.lvalues = []
-        f = open('sudoku1.txt', 'r')
+        f = open('sudoku7.txt', 'r')
         lines = f.readlines()
         if len(lines)!=9:
             print('ERROR: Invalid puzzle file')
@@ -355,6 +355,7 @@ class Sudoku:
         cons_q=utilities.Queue()
         for i in constraints:
             cons_q.insert(i)
+        print("length of queue: ",len(cons_q))
         while (cons_q.is_empty()==False):
             arc=cons_q.remove()
             for i in range(len(self.table)):
@@ -371,6 +372,7 @@ class Sudoku:
                             if (neighbour.neighbours[j]==node):
                                 neighbour.neighbours[j]=revised[1]
                         cons_q.insert((neighbour,revised[1]))
+            print("length of queue: ",len(cons_q))
         return True
 
         
@@ -388,11 +390,11 @@ class Sudoku:
         revised=False
         return_node=x
         for i in x.domain:
-            invalid=True
+            not_satisfied=True
             for j in y.domain:
                 if i!=j:
-                    invalid=False
-            if invalid:
+                    not_satisfied=False
+            if not_satisfied:
                 x.domain.remove(i)
                 self.table[x.row][x.col]=x
                 revised=True
