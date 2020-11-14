@@ -426,6 +426,7 @@ class Sudoku:
 
 
 def main():
+    st = time.time()
     sud = Sudoku()
 
     print("BEFORE: ")
@@ -456,6 +457,8 @@ def main():
         print("AFTER BACKTRACKING: ")
         sud.backtracking()
         sud.print_table()
+
+    print("Total Execution Time: %s seconds" % (time.time()-st))
 
 if __name__ == "__main__":
     main()
