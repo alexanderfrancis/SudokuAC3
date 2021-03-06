@@ -362,7 +362,7 @@ class Sudoku:
         cons_q=utilities.Queue()
         for i in constraints:
             cons_q.insert(i)
-        print("length of queue: ",len(cons_q))
+        # print("length of queue: ",len(cons_q))
         while (cons_q.is_empty()==False):
             arc=cons_q.remove()
             for i in range(len(self.table)):
@@ -379,7 +379,7 @@ class Sudoku:
                             if (neighbour.neighbours[j]==node):
                                 neighbour.neighbours[j]=revised[1]
                         cons_q.insert((neighbour,revised[1]))
-            print("length of queue: ",len(cons_q))
+            # print("length of queue: ",len(cons_q))
         return True
 
         
